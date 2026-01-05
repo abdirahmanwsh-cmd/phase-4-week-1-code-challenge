@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 
-# Prefer models.py but fall back to db_models.py if present
+# Import models with fallback for different import contexts
 try:
     from models import db, Hero, Power, HeroPower
 except ImportError:
@@ -14,7 +14,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 Migrate(app, db)
 
-# -- helpers --
+# ======= SERIALIZERS =======
 def serialize_power(p):
     if not p:
         return None
@@ -93,6 +93,6 @@ def add_hero_power():
         db.session.rollback()
         return jsonify({"errors": [str(e)]}), 422
 
-# ======= RUN APP =======
+
 if __name__ == "__main__":
     app.run(debug=True, port=5555)
